@@ -17,7 +17,7 @@ from rest_framework import mixins
 from rest_framework import generics
 
 
-class TodoList(mixins.CreateModelMixin, generics.GenericAPIView, mixins.ListModelMixin):
+class TodoList(mixins.CreateModelMixin, generics.GenericAPIView, mixins.ListModelMixin, mixins.UpdateModelMixin):
         
     queryset = Todo.objects.all()
     serializer_class = TodoSerializer
@@ -27,6 +27,9 @@ class TodoList(mixins.CreateModelMixin, generics.GenericAPIView, mixins.ListMode
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
+        
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
 
 class TodoDetail(APIView):
     def get_object(self, pk):
@@ -40,15 +43,7 @@ class TodoDetail(APIView):
         serializer = TodoSerializer(todo)
         return Response(serializer.data)
 
-
-# class TodoCreate(mixins.CreateModelMixin, generics.GenericAPIView):
-#     # queryset = Todo.objects.all()
-#     # serializer_class = TodoSerializer
-
-#     # def post(self, request, *args, **kwargs):
-#     #     return self.create(request, *args, **kwargs)
-        
-
 class TodoDelete(generics.DestroyAPIView):
     queryset = Todo.objects.all()
     serializer_class = TodoSerializer
+    

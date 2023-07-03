@@ -17,6 +17,7 @@ from todos import views
 
 urlpatterns = [
     path('todos/', views.TodoList.as_view()),
+    path('todos/<int:pk>/update/', views.TodoList.as_view()),
     path('todos/<int:pk>/delete/', views.TodoDelete.as_view()),
     path('todos/<int:pk>/', views.TodoDetail.as_view()),
 ]
