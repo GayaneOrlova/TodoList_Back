@@ -13,13 +13,20 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import mixins
+from rest_framework import generics
 
-class TodoList(APIView):
-  
-    def get(self, request, format=None):
-        todos = Todo.objects.all()
-        serializer = TodoSerializer(todos, many=True)
-        return Response(serializer.data)
+
+class TodoList(mixins.CreateModelMixin, generics.GenericAPIView, mixins.ListModelMixin):
+        
+    queryset = Todo.objects.all()
+    serializer_class = TodoSerializer
+    
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
 class TodoDetail(APIView):
     def get_object(self, pk):
@@ -32,3 +39,16 @@ class TodoDetail(APIView):
         todo = self.get_object(pk)
         serializer = TodoSerializer(todo)
         return Response(serializer.data)
+
+
+# class TodoCreate(mixins.CreateModelMixin, generics.GenericAPIView):
+#     # queryset = Todo.objects.all()
+#     # serializer_class = TodoSerializer
+
+#     # def post(self, request, *args, **kwargs):
+#     #     return self.create(request, *args, **kwargs)
+        
+
+class TodoDelete(generics.DestroyAPIView):
+    queryset = Todo.objects.all()
+    serializer_class = TodoSerializer
