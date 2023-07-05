@@ -25,7 +25,9 @@ SECRET_KEY = 'django-insecure-*d8=mq9tf$cf_#puloa=lj@8o6mvug*u50y#*fg0rvv#kbbo+)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*'] # for CORS
+
+CORS_ORIGIN_ALLOW_ALL = True # for CORS
 
 
 # Application definition
@@ -39,9 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'todos',
+    'corsheaders', # for CORS
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -49,7 +53,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.common.CommonMiddleware",
 ]
+
 
 ROOT_URLCONF = 'TodoList_Back.urls'
 
@@ -62,8 +68,8 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+                'django.contrib.auth.context_processors.auth', # for CORS
+                'django.contrib.messages.context_processors.messages', # for CORS
             ],
         },
     },
