@@ -16,7 +16,7 @@ from rest_framework import status
 from rest_framework import mixins, generics
 
 
-class TodoList(mixins.CreateModelMixin, generics.GenericAPIView, mixins.ListModelMixin, mixins.UpdateModelMixin):
+class TodoList(mixins.CreateModelMixin, generics.GenericAPIView, mixins.ListModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
         
     queryset = Todo.objects.all()
     serializer_class = TodoSerializer
@@ -25,10 +25,17 @@ class TodoList(mixins.CreateModelMixin, generics.GenericAPIView, mixins.ListMode
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-        
+        if not request.data['value'].isspace():
+            return self.create(request, *args, **kwargs)
+        else:
+            return print('data')
+    
     def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
+        return self.с(request, *args, **kwargs)
+    
+    # def delete(self, request, *args, **kwargs):
+    #     return self.destroy(request, *args, **kwargs)
+    
 
 class TodoDetail(APIView):
     def get_object(self, pk):
@@ -42,7 +49,15 @@ class TodoDetail(APIView):
         serializer = TodoSerializer(todo)
         return Response(serializer.data)
 
-class TodoDelete(generics.DestroyAPIView):
+class TodoDelete(generics.DestroyAPIView, generics.ListCreateAPIView):
     queryset = Todo.objects.all()
     serializer_class = TodoSerializer
     
+    # def des():
+    #     return print('11111')
+    #     return Response(print('dfghjuk'))
+    # def get(self, request, *args, **kwargs):
+        
+#     # serializer.save()
+#         # return self.list(request, *args, **kwargs)
+        # return Response(serializer.data, status=status.HTTP_201_CREATED)
