@@ -9,17 +9,26 @@
 
 from todos.models import Todo
 from todos.serializers import TodoSerializer
+from todos.serializers import TodoFilter
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework import mixins, generics
+from rest_framework import mixins, generics, viewsets
+
+
+from django_filters import rest_framework as filters
+
+
+from rest_framework.viewsets import ModelViewSet
+from django_filters.rest_framework import DjangoFilterBackend #new hmmmmm
 
 
 class TodoList(mixins.CreateModelMixin, generics.GenericAPIView, mixins.ListModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
         
     queryset = Todo.objects.all()
     serializer_class = TodoSerializer
+    filterset_class = TodoFilter
     
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
@@ -31,11 +40,11 @@ class TodoList(mixins.CreateModelMixin, generics.GenericAPIView, mixins.ListMode
             return print('data')
     
     def put(self, request, *args, **kwargs):
-        return self.с(request, *args, **kwargs)
+        return self.update(request, *args, **kwargs)
+    
     
     # def delete(self, request, *args, **kwargs):
     #     return self.destroy(request, *args, **kwargs)
-    
 
 class TodoDetail(APIView):
     def get_object(self, pk):
@@ -53,11 +62,35 @@ class TodoDelete(generics.DestroyAPIView, generics.ListCreateAPIView):
     queryset = Todo.objects.all()
     serializer_class = TodoSerializer
     
-    # def des():
-    #     return print('11111')
-    #     return Response(print('dfghjuk'))
-    # def get(self, request, *args, **kwargs):
+
+class TodoChecked(generics.ListCreateAPIView):
+    queryset = Todo.objects.all()
+    serializer_class = TodoSerializer
+    filter_backends = (DjangoFilterBackend)
+    list_filter = ["checked"]
+
+
+# class TodoChecked(viewsets.ModelViewSet):
+    # queryset = Todo.objects.all()
+
+    # def get_queryset(self):
+    #     res = super().get_queryset()
+    #     checked = self.kwargs.get("checked")
+    #     return res.filter(checked=True)
         
-#     # serializer.save()
-#         # return self.list(request, *args, **kwargs)
-        # return Response(serializer.data, status=status.HTTP_201_CREATED)
+# class TodoChecked(generics.ListAPIView):
+#     serializer_class = TodoSerializer
+
+#     def get_queryset(self, *args, **kwargs):
+#         queryset = Todo.objects.all()
+#         checked = self.request.query_params.get('checked')
+#         if query:
+#             queryset_list = queryset.filter(todo_checked=checked)
+#         return queryset_list
+
+
+# class CheckedProductsList(generics.ListAPIView):
+
+#     model = Todo
+#     serializer_class = TodoSerializer
+#     filterset_class = TodoFilter
