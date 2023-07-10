@@ -8,8 +8,11 @@ class TodoSerializer(serializers.ModelSerializer):
         model = Todo
         fields = ['id', 'value', 'checked',]
 
-class TodoFilter(filters.FilterSet):
-    class Meta:
-        model = Todo
-        fields = ['checked']
+
+# for filtering:
+
+# class TodoFilter(filters.FilterSet):
+#     class Meta:
+#         model = Todo
+#         fields = ['checked']
     
