@@ -88,16 +88,47 @@ class TodoCheckedDelete(generics.DestroyAPIView):
         return Response(status=status.HTTP_404_OK)
 
 
-class TodoCheckedAll(generics.UpdateAPIView):
+class TodoCheckedAll(generics.ListCreateAPIView):
     queryset = Todo.objects.filter(checked=False)
     serializer_class = TodoSerializer
     
-    def delete(self, request, *args, **kwargs):
-        todos = self.get_queryset()
-        if todos.exists():
-           todos.update(checked=True)
-           return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(status=status.HTTP_404_OK)
+    def post(self, request, *args, **kwargs):
+        # update_todos = []
+        todos = Todo.objects.filter(checked=False)
+        for todo in todos:
+            todo.checked = True
+            # update_todos.append(todo)
+        Todo.objects.bulk_update(todos,['checked'])
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    
+    
+    # update_todos = []
+    # todos = Todo.objects.filter(checked=False).update(checked=True)
+    # # for todo in todos:
+    # #     todo.checked = True
+    # update_todos.append(todos)
+    
+    # Todo.objects.bulk_update(update_todos,['checked'])
+       
+
+
+
+# TodoCheckedAll
+# serializer_class = TodoSerializer
+
+    #     # new
+#     # queryset = Todo.objects.filter(checked=False)
+#     # serializer_class = TodoSerializer()
+    
+#     # # todos = Todo.objects.filter(checked=False)
+#     # # for todo in todos:
+#     # #     todo.checked = True
+#     # #     todo.save()
+
+
+
+
 
 
 # class TodoDeleteandUpdate(generics.UpdateAPIView):
