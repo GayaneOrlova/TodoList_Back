@@ -17,14 +17,12 @@ from todos import views
 
 urlpatterns = [
     path('todos/', views.TodoList.as_view()),
-    
-    # path('todos/<str:checked>', views.TodoList.as_view()),
-
     path('todos/<int:pk>/update/', views.TodoList.as_view()),
     path('todos/<int:pk>/delete/', views.TodoDelete.as_view()),
+    path('todos/delete/checked/', views.TodoCheckedDelete.as_view()),
+    path('todos/update/nochecked/', views.TodoCheckedAll.as_view()),
 
     path('todos/<int:pk>/', views.TodoDetail.as_view()),
-    # path('todos/todo?checked=true', views.TodoChecked.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
